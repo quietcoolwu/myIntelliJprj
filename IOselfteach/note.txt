@@ -1,0 +1,103 @@
+java.io.File类用于表示文件
+
+File类只用于表示文件信息,不能用于文件内容的访问
+
+RandomAccessFile提供文件内容的读写访问,而且此可以随机访问文件
+可以访问文件的任意位置
+
+java文件模型
+  硬盘文件是byte存储,是数据集合
+打开文件的两种模式:rw, r(只读)
+  Random.. raf = new raf(file, "rw")
+  文件指针,打开文件时指针在开头pointer=0
+
+  写方法:raf.write(int)--->只写一个字节(后8位),同时指针指向下一个位置
+  读方法:int b=raf.read()从指针所在开始读
+  读写完成后一定要关闭(Oracle官方说明)
+
+  IO流(输入,输出)
+  字节流,字符流
+
+
+  1.字节流
+  1)InputStream  OutPutStream
+   inpu..抽象了应用程序读取数据的方式
+   out..抽象了应用程序写入数据的方式
+   读写结束:EOF或者读到-1
+  3)输入流:从键盘读写入文件
+   int b = in.read();//读取一个字节无符号填充到int低八位.-1为EOF
+   in.read(byte[] buf)//读取数据填充到字节数组
+   in.read(byte[] buf, int start, int size)//读取数据到字节数组buf-从start位置开始.存放size长度的数据
+
+  4)输出流:用来进行写操作
+   out.write(int b)只写出一个byte到流,写的b的第八位,一个整形是
+   out.write(byte[] buf)//将buf字节数组都写入到流
+   out.write(byte[] buf, int start, int size)写入到流-数据从字节数组buf来-从start位置开始写入size长度的数据
+
+ 5)FileInputStream--->在文件上实现读取数据
+ 6)FileOutputStream--->实现向文件中写出byte数据的方法
+
+ 7)DataOutputStream/InputSTReam
+    对"流"功能的扩展,可以更加方便读取int/long字符等类型数据
+    DataOutputStream
+        writeInt()/writeDouble()/writeUTF()
+        实质:字节操作的包装
+
+
+ 8)BufferedInputStream&BufferOutputStream
+ 这两个流类为IO提供带缓冲区的操作,一般打开文件进行写入或读取操作都会加上缓冲,这种流模式提高IO的性能.
+ 从应用程序中把输入放入文件:
+ FileOutput...write()相当于一滴一滴转移水
+ DataOutput...writeXXX(int double ...)方便一些 相当于一勺勺转移
+ BufferedOUTPUT....writeXXX方法更方便,相当于一勺水先放入桶中(缓冲区),再从桶中倒入缸中,性能提高了.
+结论:批量字节(copyfile--buf)最快
+
+
+
+2.字符流
+1)编码问题
+2)认识文本和文本文件
+java中的文本(char)是16位无符号整数,是字符的Unicode编码
+文件是byte byte byte...的数据序列
+文本文件是文本(char)序列按照某种编码方案(utf-8 ,utf-16be, gbk)序列化为byte的存储结构
+3)字符流抽象类(Reader Writer)--->操作文本文件
+字符处理:一次处理一个字符
+字符的底层仍然是基本的字节序列
+    InputStreamReader byte流解析为char流(字节-字符),按编码解析
+    Output....        char--->byte流,按编码处理
+
+过滤器:FileReader/Writer
+字符流过滤器
+bufferedreader--->一次读一行
+...writer/printwriter--->一次写一行
+
+
+3.对象的序列化与反序列化
+1)序列化:object-byte
+2)序列化流(oBjectOutputStream), 是过滤流,writeobject方法
+  反序列化流(...input...),readobject方法
+
+3)序列化接口(Serializable)
+  对象必须实现序列化接口才能进行序列化,否则将出现异常.
+  没有任何实现接口的方法,只是一个标准
+
+4)transient关键字
+private void writeObject(java.io.ObjectOutputStream s)
+            throws java.io.IOException {
+        s.defaultWriteObject();//把jvm默认能进行序列化的元素序列化
+        s.writeInt(stuAge);//自己完成stuAge的序列化
+        //ArrayList
+    }
+
+    private void readObject(java.io.ObjectInputStream s)
+            throws java.io.IOException, ClassNotFoundException {
+        s.defaultReadObject();//把jvm默认能反序列话的元素进行反序列化
+        this.stuAge = s.readInt();//自己完成反序列化操作
+    }
+
+    以上对应分析arraylist序列化与反序列化的问题
+
+
+5)序列化中子类和父类构造函数的调用
+
+
