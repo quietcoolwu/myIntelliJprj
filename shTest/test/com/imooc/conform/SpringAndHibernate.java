@@ -1,6 +1,8 @@
 package com.imooc.conform;
 
-import org.hibernate.impl.SessionFactoryImpl;
+//import org.hibernate.impl.SessionFactoryImpl;
+
+import org.hibernate.internal.SessionFactoryImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
