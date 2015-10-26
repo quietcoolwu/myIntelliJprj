@@ -1,0 +1,2 @@
+类是谁的对象?
+是java.lang.Class

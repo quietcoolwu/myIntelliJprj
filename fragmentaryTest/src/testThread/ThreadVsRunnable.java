@@ -22,8 +22,8 @@ class ImplementsRunnable implements Runnable {
 
 class ExtendsThread extends Thread {
 
-
     private int counter = 0;
+    //private static int counter = 0;
 
     public void run() {
         counter++;
